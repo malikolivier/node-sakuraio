@@ -1,0 +1,22 @@
+{
+  "name": "sakuraio",
+  "version": "0.0.1",
+  "description": "SAKURA Internet IoT Communication Module Library for NodeJS",
+  "main": "sakuraio.js",
+  "scripts": {
+    "test": "standard"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/symax/node-sakuraio.git"
+  },
+  "author": "Malik Olivier Boussejra <malik@boussejra.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/symax/node-sakuraio/issues"
+  },
+  "homepage": "https://gitlab.com/symax/node-sakuraio#README",
+  "devDependencies": {
+    "standard": "^10.0.2"
+  }
+}
