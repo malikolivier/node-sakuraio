@@ -4,7 +4,11 @@ SakuraIOSim.open(function (err, bus) {
   if (err) throw err
   bus.getConnectionStatus(function (err, status) {
     if (err) throw err
-    console.log(`ASYNC: ${status}`)
+    console.log(`ASYNC1: ${status}`)
+  })
+  bus.getConnectionStatus(function (err, status) {
+    if (err) throw err
+    console.log(`ASYNC2: ${status}`)
   })
 })
 

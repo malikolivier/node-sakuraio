@@ -118,20 +118,28 @@ module.exports = {
         }
       })
     }
-    function executeCommand (cmd, requestBuf, cb) {
-      if (!cb) {
-        cb = requestBuf
-        requestBuf = Buffer.alloc(0)
-      }
+    var stack = []
+    function _executeNextCommand () {
+      if (stack.length === 0 || !idle) return
+      var { cmd, requestBuf, cb } = stack.shift()
       idle = false
       _executeCommand(cmd, requestBuf, function (err, response) {
-        idle = true
         if (err) {
           cb(err, response)
         } else {
           cb(null, response)
         }
+        idle = true
+        _executeNextCommand()
       })
+    }
+    function executeCommand (cmd, requestBuf, cb) {
+      if (!cb) {
+        cb = requestBuf
+        requestBuf = Buffer.alloc(0)
+      }
+      stack.push({ cmd, requestBuf, cb })
+      _executeNextCommand()
     }
     function executeCommandSync (cmd, requestBuf = Buffer.alloc(0)) {
       if (!idle) {

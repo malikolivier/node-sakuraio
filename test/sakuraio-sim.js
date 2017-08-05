@@ -9,6 +9,7 @@ function createBus () {
     sum += byte
   }
   function receiveByteSync () {
+    if (count >= 4) count = 0
     count += 1
     switch (count) {
       case 1:
