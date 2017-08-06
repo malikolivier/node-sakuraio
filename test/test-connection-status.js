@@ -44,3 +44,27 @@ describe('echoBack', function () {
     })
   })
 })
+
+// SakuraIOSim will throw exceptions for any syntax error
+describe('enqueueTx', function () {
+  it('enqueue string with success', function (done) {
+    this.bus.enqueueTx(3, 'Hello!', function (err) {
+      if (err) throw err
+      done()
+    })
+  })
+
+  it('enqueue number with success', function (done) {
+    this.bus.enqueueTx(0, 124.123, function (err) {
+      if (err) throw err
+      done()
+    })
+  })
+
+  it('enqueue number with offset with success', function (done) {
+    this.bus.enqueueTx(3, 124, { offset: 15000 }, function (err) {
+      if (err) throw err
+      done()
+    })
+  })
+})

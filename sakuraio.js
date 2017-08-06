@@ -228,6 +228,48 @@ module.exports = {
       echoBack (requestBuf, cb) {
         executeCommand(C.CMD_ECHO_BACK, requestBuf, cb)
       },
+
+      enqueueTx (channel, value, options, cb) {
+        if (!cb) {
+          cb = options
+          options = {}
+        }
+        var requestBuf
+        if (options.offset === undefined) {
+          requestBuf = Buffer.alloc(10)
+        } else {
+          requestBuf = Buffer.alloc(18)
+        }
+        requestBuf[0] = channel
+        if (options.type === undefined) {
+          // Guess type anf convert value to 8-byte buffer
+          if (typeof value === 'number') {
+            // Encode as 64-bit double, as JS uses 64-bit double
+            options.type = C.TYPE_64BIT_FLOAT
+            value = Util.numberToFloat64Buffer(value)
+          } else if (typeof value === 'string') {
+            // Convert string to buffer
+            options.type = C.TYPE_8BYTE_ARRAY
+            value = Util.stringTo64BitBuffer(value)
+          } else if (value instanceof Buffer) {
+            options.type = C.TYPE_8BYTE_ARRAY
+            value = Util.bufferTo64BitBuffer(value)
+          } else {
+            throw new Error(`Cannot guess type to use with ${value}`)
+          }
+        }
+        requestBuf[1] = options.type
+        for (var i = 0; i < value.length; i++) {
+          requestBuf[2 + i] = value[i]
+        }
+        if (options.offset !== undefined) {
+          var offset = Util.numberToUnsignedInt64Buffer(options.offset)
+          for (i = 0; i < offset.length; i++) {
+            requestBuf[10 + i] = offset[i]
+          }
+        }
+        executeCommand(C.CMD_TX_ENQUEUE, requestBuf, cb)
+      }
     }
   }
 }

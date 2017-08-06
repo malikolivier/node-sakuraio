@@ -61,6 +61,15 @@ module.exports = {
   SIGNAL_QUALITY_STRONG: 0x04,
   SIGNAL_QUALITY_VERY_STRONG: 0x05,
 
+  // Types
+  TYPE_32BIT_SIGNED_INT: 'i'.charCodeAt(0),
+  TYPE_32BIT_UNSIGNED_INT: 'I'.charCodeAt(0),
+  TYPE_64BIT_SIGNED_INT: 'l'.charCodeAt(0),
+  TYPE_64BIT_UNSIGNED_INT: 'L'.charCodeAt(0),
+  TYPE_32BIT_FLOAT: 'f'.charCodeAt(0),
+  TYPE_64BIT_FLOAT: 'd'.charCodeAt(0),
+  TYPE_8BYTE_ARRAY: 'b'.charCodeAt(0),
+
   // FileStatus
   FILE_STATUS_ERROR: 0x01,
   FILE_STATUS_INVALID_REQUEST: 0x02,

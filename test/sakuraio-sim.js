@@ -1,5 +1,6 @@
 const SakuraIO = require('../sakuraio')
 const C = require('../src/commands')
+const Util = require('../src/util')
 
 const CMDS = {
   [C.CMD_GET_CONNECTION_STATUS]: function () {
@@ -10,19 +11,23 @@ const CMDS = {
   },
   [C.CMD_GET_DATETIME]: function () {
     var now = Date.now()
-    var residual = now
-    var response = Buffer.alloc(8)
-    var i = 0
-    while (residual > 0xFF && i < 7) {
-      response[i] = residual % 0x100
-      residual = Math.floor(residual / 0x100)
-      i += 1
-    }
-    response[i] = residual
-    return response
+    return Util.numberToUnsignedInt64Buffer(now)
   },
   [C.CMD_ECHO_BACK]: function (request) {
     return Buffer.from(request)
+  },
+  [C.CMD_TX_ENQUEUE]: function (request) {
+    if (request[0] > 0x7F) {
+      throw new Error(`Channel cannot be set to 128 or more. Got ${request[0]}`)
+    } else if ([C.TYPE_32BIT_SIGNED_INT, C.TYPE_32BIT_UNSIGNED_INT,
+                C.TYPE_64BIT_SIGNED_INT, C.TYPE_64BIT_UNSIGNED_INT,
+                C.TYPE_32BIT_FLOAT, C.TYPE_64BIT_FLOAT,
+                C.TYPE_8BYTE_ARRAY].indexOf(request[1]) < 0) {
+      throw new Error(`Incorrect type given: ${request[1]}`)
+    } else if (request.length !== 10 && request.length !== 18) {
+      throw new Error(`Unexpected length of request: ${request}`)
+    }
+    return Buffer.alloc(0)
   }
 }
 
