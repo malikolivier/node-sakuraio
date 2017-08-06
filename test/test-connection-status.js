@@ -471,3 +471,12 @@ describe('unlock', function () {
     })
   })
 })
+
+describe('updateFirmware', function () {
+  it('update firmwares (does nothing in simulation...)', function (done) {
+    this.bus.updateFirmware(function (err) {
+      if (err) throw err
+      done()
+    })
+  })
+})

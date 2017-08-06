@@ -518,6 +518,13 @@ module.exports = {
       },
       unlock (cb) {
         executeCommand(C.CMD_GET_FIRMWARE_VERSION, Buffer.from([0x53, 0x6B, 0x72, 0x61]), cb)
+      },
+
+      updateFirmwareSync () {
+        return executeCommandSync(C.CMD_UPDATE_FIRMWARE)
+      },
+      updateFirmware (cb) {
+        executeCommand(C.CMD_UPDATE_FIRMWARE, cb)
       }
     }
   }

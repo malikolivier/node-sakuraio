@@ -189,6 +189,9 @@ function createBus () {
         throw new Error('Cannot unlock! Magic numbers are wrong!')
       }
       return Buffer.alloc(0)
+    },
+    [C.CMD_UPDATE_FIRMWARE]: function () {
+      return Buffer.alloc(0)
     }
   }
 
