@@ -461,3 +461,13 @@ describe('getFirmwareVersion', function () {
     })
   })
 })
+
+describe('unlock', function () {
+  // If the unlock method uses wrong magic numbers, SakuraIOSim will throw an error!
+  it('unlocks module', function (done) {
+    this.bus.unlock(function (err) {
+      if (err) throw err
+      done()
+    })
+  })
+})
