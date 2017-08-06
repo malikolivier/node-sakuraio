@@ -47,7 +47,7 @@ module.exports = {
   },
   bufferTo64BitBuffer (inBuffer) {
     var buffer = Buffer.alloc(8)
-    for (var i = 0; i < string.length; i++) {
+    for (var i = 0; i < inBuffer.length; i++) {
       buffer[i] = inBuffer[i]
     }
     return buffer

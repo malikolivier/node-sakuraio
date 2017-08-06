@@ -67,4 +67,8 @@ describe('enqueueTx', function () {
       done()
     })
   })
+
+  it('enqueue number with offset with success (sync)', function () {
+    this.bus.enqueueTxSync(3, 124, { offset: 15000 })
+  })
 })
