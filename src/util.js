@@ -105,5 +105,15 @@ module.exports = {
   decodeOffset (responseBuffer) {
     return unsignedInt64BufferToNumber(responseBuffer, 10)
   },
-  unsignedInt64BufferToNumber
+  unsignedInt64BufferToNumber,
+
+  bufferToProductId (buffer) {
+    if (buffer[0] === 0x01 && buffer[1] === 0x00) {
+      return 'SCM-LTE-Beta'
+    } else if (buffer[0] === 0x02 && buffer[1] === 0x00) {
+      return 'SCM-LTE-01'
+    } else {
+      return buffer.toString('hex')
+    }
+  }
 }

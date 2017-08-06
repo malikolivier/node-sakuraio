@@ -173,6 +173,9 @@ function createBus () {
                                    fileDownloadCursor + request[0])
       fileDownloadCursor += request[0]
       return response
+    },
+    [C.CMD_GET_PRODUCT_ID]: function () {
+      return Buffer.from([0xFF, 0xFF])
     }
   }
 

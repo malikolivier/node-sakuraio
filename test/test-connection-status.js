@@ -430,3 +430,13 @@ describe('getFileData', function () {
     })
   })
 })
+
+describe('getProductID', function () {
+  it('get simulated SakuraIO product ID', function (done) {
+    this.bus.getProductID(function (err, productId) {
+      if (err) throw err
+      assert.equal(productId, 'ffff')
+      done()
+    })
+  })
+})

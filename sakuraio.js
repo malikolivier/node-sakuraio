@@ -480,6 +480,16 @@ module.exports = {
       },
       getFileData (size, cb) {
         executeCommand(C.CMD_GET_FILE_DATA, Buffer.from([size]), cb)
+      },
+
+      getProductIDSync () {
+        return Util.bufferToProductId(executeCommandSync(C.CMD_GET_PRODUCT_ID))
+      },
+      getProductID (cb) {
+        executeCommand(C.CMD_GET_PRODUCT_ID, function (err, response) {
+          if (err) cb(err)
+          else cb(null, Util.bufferToProductId(response))
+        })
       }
     }
   }
