@@ -525,6 +525,18 @@ module.exports = {
       },
       updateFirmware (cb) {
         executeCommand(C.CMD_UPDATE_FIRMWARE, cb)
+      },
+
+      getFirmwareUpdateStatusSync () {
+        return Util.bufferToFirmwareUpdateStatus(
+          executeCommandSync(C.CMD_GET_UPDATE_FIRMWARE_STATUS)
+        )
+      },
+      getFirmwareUpdateStatus (cb) {
+        executeCommand(C.CMD_GET_UPDATE_FIRMWARE_STATUS, function (err, response) {
+          if (err) cb(err)
+          else cb(null, Util.bufferToFirmwareUpdateStatus(response))
+        })
       }
     }
   }

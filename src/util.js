@@ -115,5 +115,13 @@ module.exports = {
     } else {
       return buffer.toString('hex')
     }
+  },
+
+  // TODO: Current datasheet is not very clear about how the error codes should be interpreted
+  bufferToFirmwareUpdateStatus (buffer) {
+    return {
+      updating: (buffer[0] & 0b10000000) >> 7 === 1,
+      anyError: (buffer[0] & 0b01111111) === 0
+    }
   }
 }

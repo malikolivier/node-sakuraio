@@ -65,6 +65,8 @@ function createBus () {
   var queueLength = 0
   var RxQueue = createRxQueue42()
   var fileId, fileDownloadCursor
+  var unlocked = false
+  var firmwareUpdating = false
   const CMDS = {
     [C.CMD_GET_CONNECTION_STATUS]: function () {
       return Buffer.from([C.CONNECTION_STATUS_ERROR_NONE])
@@ -188,10 +190,24 @@ function createBus () {
       if (request.length !== 4 || request[0] !== 0x53 || request[1] !== 0x6B || request[2] !== 0x72 || request[3] !== 0x61) {
         throw new Error('Cannot unlock! Magic numbers are wrong!')
       }
+      unlocked = true
       return Buffer.alloc(0)
     },
     [C.CMD_UPDATE_FIRMWARE]: function () {
+      if (unlocked) {
+        firmwareUpdating = true
+        unlocked = false
+      }
       return Buffer.alloc(0)
+    },
+    [C.CMD_GET_UPDATE_FIRMWARE_STATUS]: function () {
+      var response = Buffer.alloc(1)
+      if (firmwareUpdating) {
+        response[0] |= 0b10000000
+      } else {
+        response[0] &= 0b01111111
+      }
+      return response
     }
   }
 
@@ -251,6 +267,9 @@ function createBus () {
         } else {
           currentReceiveState = RECEIVE_STATE.WILL_SEND_RESPONSE_LENGTH
           result = C.CMD_ERROR_NONE
+          if (currentCmd !== C.CMD_UPDATE_FIRMWARE && currentCmd !== C.CMD_SOFTWARE_RESET) {
+            unlocked = false
+          }
         }
         return result
       case RECEIVE_STATE.WILL_SEND_RESPONSE_LENGTH:
