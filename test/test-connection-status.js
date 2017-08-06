@@ -313,3 +313,20 @@ describe('getRxQueueLength', function () {
     })
   })
 })
+
+describe('clearRx', function () {
+  beforeEach(function () {
+    this.busRx = SakuraIOSim.openSync()
+  })
+
+  it('clears the queue', function (done) {
+    this.busRx.clearRx((err) => {
+      if (err) throw err
+      this.busRx.getRxQueueLength((err, response) => {
+        if (err) throw err
+        assert.equal(response.queued, 0)
+        done()
+      })
+    })
+  })
+})

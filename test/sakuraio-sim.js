@@ -122,6 +122,10 @@ function createBus () {
     },
     [C.CMD_RX_LENGTH]: function () {
       return Buffer.from([0, RxQueue.length])
+    },
+    [C.CMD_RX_CLEAR]: function () {
+      RxQueue = []
+      return Buffer.alloc(0)
     }
   }
 

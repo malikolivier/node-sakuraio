@@ -407,6 +407,13 @@ module.exports = {
           else cb(null, { available: response[0], queued: response[1] })
         })
       },
+
+      clearRxSync () {
+        return executeCommandSync(C.CMD_RX_CLEAR)
+      },
+      clearRx (cb) {
+        executeCommand(C.CMD_RX_CLEAR, cb)
+      }
     }
   }
 }
