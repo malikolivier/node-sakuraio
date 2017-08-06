@@ -372,5 +372,23 @@ describe('getFileMetaData', function () {
         done()
       })
     })
+
+    describe('getFileDownloadStatus', function () {
+      it('returns receivedSize in octet', function (done) {
+        this.bus.getFileDownloadStatus(function (err, response) {
+          if (err) throw err
+          assert(typeof response.receivedSize === 'number')
+          done()
+        })
+      })
+
+      it('returns status', function (done) {
+        this.bus.getFileDownloadStatus(function (err, response) {
+          if (err) throw err
+          assert.equal(response.status, C.FILE_DOWNLOAD_STATUS_RECEIVING)
+          done()
+        })
+      })
+    })
   })
 })

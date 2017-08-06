@@ -151,6 +151,16 @@ function createBus () {
         response[0] = C.FILE_STATUS_NOTFOUND
       }
       return response
+    },
+    [C.CMD_GET_FILE_DOWNLOAD_STATUS]: function () {
+      var response = Buffer.alloc(5)
+      if (fileId !== undefined) {
+        response[0] = C.FILE_DOWNLOAD_STATUS_RECEIVING
+      } else {
+        response[0] = C.FILE_DOWNLOAD_STATUS_UNKNOWN
+      }
+      response.writeIntLE(3, 1, 4)
+      return response
     }
   }
 

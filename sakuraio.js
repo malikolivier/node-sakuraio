@@ -447,6 +447,25 @@ module.exports = {
             })
           }
         })
+      },
+
+      getFileDownloadStatusSync () {
+        var response = executeCommandSync(C.CMD_GET_FILE_DOWNLOAD_STATUS)
+        return {
+          status: response[0],
+          receivedSize: response.readIntLE(1, 4)
+        }
+      },
+      getFileDownloadStatus (cb) {
+        executeCommand(C.CMD_GET_FILE_DOWNLOAD_STATUS, function (err, response) {
+          if (err) cb(err)
+          else {
+            cb(null, {
+              status: response[0],
+              receivedSize: response.readIntLE(1, 4)
+            })
+          }
+        })
       }
     }
   }
