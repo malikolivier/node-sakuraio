@@ -332,7 +332,14 @@ module.exports = {
       },
       clearTx (cb) {
         executeCommand(C.CMD_TX_CLEAR, cb)
-      }
+      },
+
+      sendSync () {
+        return executeCommandSync(C.CMD_TX_SEND)
+      },
+      send (cb) {
+        executeCommand(C.CMD_TX_SEND, cb)
+      },
     }
   }
 }
