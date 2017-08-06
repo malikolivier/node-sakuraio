@@ -15,8 +15,50 @@ const RECEIVE_STATE = {
   WILL_SEND_PARITY_BYTE: Symbol('WILL_SEND_PARITY_BYTE')
 }
 
+// Create a standard RxQueue with all types of elements to work with
+function createRxQueue42 () {
+  var int32 = Buffer.alloc(18)
+  var uint32 = Buffer.alloc(18)
+  var int64 = Buffer.alloc(18)
+  var uint64 = Buffer.alloc(18)
+  var float32 = Buffer.alloc(18)
+  var float64 = Buffer.alloc(18)
+  var array64 = Buffer.alloc(18)
+  int32[0] = 0x00
+  uint32[0] = 0x01
+  int64[0] = 0x02
+  uint64[0] = 0x03
+  float32[0] = 0x04
+  float64[0] = 0x05
+  array64[0] = 0x06
+  int32[1] = C.TYPE_32BIT_SIGNED_INT
+  uint32[1] = C.TYPE_32BIT_UNSIGNED_INT
+  int64[1] = C.TYPE_64BIT_SIGNED_INT
+  uint64[1] = C.TYPE_64BIT_UNSIGNED_INT
+  float32[1] = C.TYPE_32BIT_FLOAT
+  float64[1] = C.TYPE_64BIT_FLOAT
+  array64[1] = C.TYPE_8BYTE_ARRAY
+  new DataView(int32.buffer).setInt32(2, 42, true)
+  new DataView(uint32.buffer).setUint32(2, 42, true)
+  // No setInt64 available, however we get the same result as long as the number is not too big
+  new DataView(int64.buffer).setInt32(2, 42, true)
+  new DataView(uint64.buffer).setUint32(2, 42, true)
+  new DataView(float32.buffer).setFloat32(2, 42, true)
+  new DataView(float64.buffer).setFloat64(2, 42, true)
+  Buffer.from('Hello42!').copy(array64, 2)
+  int32[10] = 42
+  uint32[10] = 42
+  int64[10] = 42
+  uint64[10] = 42
+  float32[10] = 42
+  float64[10] = 42
+  array64[10] = 42
+  return [int32, uint32, int64, uint64, float32, float64, array64]
+}
+
 function createBus () {
   var queueLength = 0
+  var RxQueue = createRxQueue42()
   const CMDS = {
     [C.CMD_GET_CONNECTION_STATUS]: function () {
       return Buffer.from([C.CONNECTION_STATUS_ERROR_NONE])
@@ -71,6 +113,9 @@ function createBus () {
     },
     [C.CMD_TX_STAT]: function () {
       return Buffer.from([C.TX_STAT_NONE, C.TX_STAT_NONE])
+    },
+    [C.CMD_RX_DEQUEUE]: function () {
+      return Buffer.from(RxQueue.shift())
     }
   }
 

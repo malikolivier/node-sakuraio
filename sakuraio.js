@@ -351,6 +351,27 @@ module.exports = {
           else cb(null, { queue: response[0], immediate: response[1] })
         })
       },
+
+      dequeueRxSync () {
+        var response = executeCommandSync(C.CMD_RX_DEQUEUE)
+        return {
+          channel: response[0],
+          value: Util.decodeValue(response),
+          offset: Util.decodeOffset(response)
+        }
+      },
+      dequeueRx (cb) {
+        executeCommand(C.CMD_RX_DEQUEUE, function (err, response) {
+          if (err) cb(err)
+          else {
+            cb(null, {
+              channel: response[0],
+              value: Util.decodeValue(response),
+              offset: Util.decodeOffset(response)
+            })
+          }
+        })
+      }
     }
   }
 }

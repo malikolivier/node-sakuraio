@@ -203,3 +203,71 @@ describe('getTxStatus', function () {
     assert(typeof status.immediate === 'number')
   })
 })
+
+describe('dequeueRx', function () {
+  context('int32', function () {
+    beforeEach(function () {
+      this.busRx = SakuraIOSim.openSync()
+    })
+
+    it('returned object has a "channel" property', function () {
+      var response = this.busRx.dequeueRxSync()
+      assert(typeof response.channel === 'number')
+    })
+    it('channel is 0', function () {
+      var response = this.busRx.dequeueRxSync()
+      assert.equal(response.channel, 0x00)
+    })
+    it('returned object has an "offset" property', function () {
+      var response = this.busRx.dequeueRxSync()
+      assert(typeof response.offset === 'number')
+    })
+    it('can dequeues an int32', function () {
+      var response = this.busRx.dequeueRxSync()
+      assert.equal(response.value, 42)
+    })
+    it('offset is 42', function (done) {
+      this.busRx.dequeueRx(function (err, response) {
+        if (err) throw err
+        assert.equal(response.offset, 42)
+        done()
+      })
+    })
+  })
+
+  context('all types', function () {
+    before(function () {
+      this.busRx = SakuraIOSim.openSync()
+    })
+
+    // The order of the queue is predetermined by sakuraio-sim.js!
+    it('can dequeue an int32', function () {
+      var response = this.busRx.dequeueRxSync()
+      assert.equal(response.value, 42)
+    })
+    it('can dequeue a uint32', function () {
+      var response = this.busRx.dequeueRxSync()
+      assert.equal(response.value, 42)
+    })
+    it('can dequeue an int64', function () {
+      var response = this.busRx.dequeueRxSync()
+      assert.equal(response.value, 42)
+    })
+    it('can dequeue a uint64', function () {
+      var response = this.busRx.dequeueRxSync()
+      assert.equal(response.value, 42)
+    })
+    it('can dequeue a float32', function () {
+      var response = this.busRx.dequeueRxSync()
+      assert.equal(response.value, 42)
+    })
+    it('can dequeue a float64', function () {
+      var response = this.busRx.dequeueRxSync()
+      assert.equal(response.value, 42)
+    })
+    it('can dequeue an 8-byte array', function () {
+      var response = this.busRx.dequeueRxSync()
+      assert.deepEqual(response.value, Buffer.from('Hello42!'))
+    })
+  })
+})
