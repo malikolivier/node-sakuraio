@@ -513,11 +513,11 @@ module.exports = {
       },
 
       unlockSync () {
-        return executeCommandSync(C.CMD_GET_FIRMWARE_VERSION,
+        return executeCommandSync(C.CMD_UNLOCK,
                                   Buffer.from([0x53, 0x6B, 0x72, 0x61]))
       },
       unlock (cb) {
-        executeCommand(C.CMD_GET_FIRMWARE_VERSION, Buffer.from([0x53, 0x6B, 0x72, 0x61]), cb)
+        executeCommand(C.CMD_UNLOCK, Buffer.from([0x53, 0x6B, 0x72, 0x61]), cb)
       },
 
       updateFirmwareSync () {

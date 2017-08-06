@@ -185,7 +185,7 @@ function createBus () {
       return Buffer.from(PackageJSON.version)
     },
     [C.CMD_UNLOCK]: function (request) {
-      if (request.size !== 4 || request[0] !== 0x53 || request[1] !== 0x6B || request[2] !== 0x72 || request[3] !== 0x61) {
+      if (request.length !== 4 || request[0] !== 0x53 || request[1] !== 0x6B || request[2] !== 0x72 || request[3] !== 0x61) {
         throw new Error('Cannot unlock! Magic numbers are wrong!')
       }
       return Buffer.alloc(0)
