@@ -38,13 +38,13 @@ function createRxQueue42 () {
   float32[1] = C.TYPE_32BIT_FLOAT
   float64[1] = C.TYPE_64BIT_FLOAT
   array64[1] = C.TYPE_8BYTE_ARRAY
-  new DataView(int32.buffer).setInt32(2, 42, true)
-  new DataView(uint32.buffer).setUint32(2, 42, true)
+  int32.writeInt32LE(42, 2)
+  uint32.writeUInt32LE(42, 2)
   // No setInt64 available, however we get the same result as long as the number is not too big
-  new DataView(int64.buffer).setInt32(2, 42, true)
-  new DataView(uint64.buffer).setUint32(2, 42, true)
-  new DataView(float32.buffer).setFloat32(2, 42, true)
-  new DataView(float64.buffer).setFloat64(2, 42, true)
+  int64.writeInt32LE(42, 2)
+  uint64.writeUInt32LE(42, 2)
+  float32.writeFloatLE(42, 2)
+  float64.writeDoubleLE(42, 2)
   Buffer.from('Hello42!').copy(array64, 2)
   int32[10] = 42
   uint32[10] = 42

@@ -43,8 +43,7 @@ module.exports = {
   numberToFloat64Buffer (number) {
     // Encode as 64-bit double floating point number
     var buffer = Buffer.alloc(8)
-    var view = new DataView(buffer.buffer)
-    view.setFloat64(0, number, true)
+    buffer.writeDoubleLE(number, 0)
     return buffer
   },
   numberToFloat32Buffer (number) {
@@ -88,17 +87,17 @@ module.exports = {
   decodeValue (responseBuffer) {
     switch (responseBuffer[1]) {
       case C.TYPE_32BIT_SIGNED_INT:
-        return new DataView(responseBuffer.buffer).getInt32(2, true)
+        return responseBuffer.readInt32LE(2)
       case C.TYPE_32BIT_UNSIGNED_INT:
-        return new DataView(responseBuffer.buffer).getUint32(2, true)
+        return responseBuffer.readUInt32LE(2)
       case C.TYPE_64BIT_SIGNED_INT:
         return signedInt64BufferToNumber(responseBuffer, 2)
       case C.TYPE_64BIT_UNSIGNED_INT:
         return unsignedInt64BufferToNumber(responseBuffer, 2)
       case C.TYPE_32BIT_FLOAT:
-        return new DataView(responseBuffer.buffer).getFloat32(2, true)
+        return responseBuffer.readFloatLE(2)
       case C.TYPE_64BIT_FLOAT:
-        return new DataView(responseBuffer.buffer).getFloat64(2, true)
+        return responseBuffer.readDoubleLE(2)
       case C.TYPE_8BYTE_ARRAY:
         return responseBuffer.slice(2, 10)
     }
