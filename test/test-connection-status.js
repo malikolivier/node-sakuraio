@@ -494,3 +494,13 @@ describe('getFirmwareUpdateStatus', function () {
     })
   })
 })
+
+describe('reset', function () {
+  // If the unlock method uses wrong magic numbers, SakuraIOSim will throw an error!
+  it('resets module', function (done) {
+    this.bus.unlock(function (err) {
+      if (err) throw err
+      done()
+    })
+  })
+})

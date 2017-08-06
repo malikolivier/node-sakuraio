@@ -208,6 +208,24 @@ function createBus () {
         response[0] &= 0b01111111
       }
       return response
+    },
+    [C.CMD_SOFTWARE_RESET]: function () {
+      queueLength = 0
+      RxQueue = createRxQueue42()
+      fileId = undefined
+      fileDownloadCursor = undefined
+      unlocked = false
+      firmwareUpdating = false
+      currentCmd = undefined
+      requestBuf = undefined
+      requestByteCount = undefined
+      parity = undefined
+      result = undefined
+      responseBuf = undefined
+      responseByteCount = undefined
+      currentSendState = SEND_STATE.WAITING_COMMAND
+      currentReceiveState = RECEIVE_STATE.WILL_SEND_RESULT
+      return Buffer.alloc(0)
     }
   }
 

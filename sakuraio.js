@@ -537,6 +537,13 @@ module.exports = {
           if (err) cb(err)
           else cb(null, Util.bufferToFirmwareUpdateStatus(response))
         })
+      },
+
+      resetSync () {
+        return executeCommandSync(C.CMD_SOFTWARE_RESET)
+      },
+      reset (cb) {
+        executeCommand(C.CMD_SOFTWARE_RESET, cb)
       }
     }
   }
