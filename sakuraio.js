@@ -29,6 +29,7 @@ module.exports = {
         bus.sendByte(requestBuf[i], function (err) {
           if (err) cb(err)
           else {
+            parity ^= requestBuf[i]
             _writeBuffer(i + 1, requestBuf, cb)
           }
         })
