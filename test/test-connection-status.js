@@ -482,14 +482,23 @@ describe('updateFirmware', function () {
 })
 
 describe('getFirmwareUpdateStatus', function () {
-  before(function () {
+  beforeEach(function () {
     this.bus.unlockSync()
     this.bus.updateFirmwareSync()
   })
+
   it('status should be updating', function (done) {
     this.bus.getFirmwareUpdateStatus(function (err, status) {
       if (err) throw err
       assert(status.updating)
+      done()
+    })
+  })
+  it('shows no error', function (done) {
+    this.bus.getFirmwareUpdateStatus(function (err, status) {
+      if (err) throw err
+      console.log(status.anyError)
+      assert(!status.anyError)
       done()
     })
   })

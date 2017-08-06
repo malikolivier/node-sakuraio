@@ -117,11 +117,29 @@ module.exports = {
     }
   },
 
-  // TODO: Current datasheet is not very clear about how the error codes should be interpreted
   bufferToFirmwareUpdateStatus (buffer) {
+    var errCode = buffer[0] & 0x3f
+    var message
+    switch (errCode) {
+      case 0x00:
+        message = 'No error'
+        break
+      case 0x01:
+        message = 'Up to date'
+        break
+      case 0x02:
+        message = 'Failed to get latest version'
+        break
+      case 0x03:
+        message = 'Failed to dowload'
+        break
+      case 0x04:
+        message = 'Verification of downloaded package failed'
+    }
     return {
       updating: (buffer[0] & 0b10000000) >> 7 === 1,
-      anyError: (buffer[0] & 0b01111111) === 0
+      anyError: (buffer[0] & 0b01111111) !== 0,
+      message
     }
   }
 }
