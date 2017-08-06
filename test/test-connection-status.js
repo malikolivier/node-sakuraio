@@ -289,3 +289,27 @@ describe('peekRx', function () {
     assert.equal(response.value, 42)
   })
 })
+
+describe('getRxQueueLength', function () {
+  beforeEach(function () {
+    this.busRx = SakuraIOSim.openSync()
+    this.previousResponse = this.busRx.getRxQueueLengthSync()
+    this.busRx.dequeueRxSync()
+  })
+
+  it('available slot decreased by one', function (done) {
+    this.busRx.getRxQueueLength((err, response) => {
+      if (err) throw err
+      assert.equal(this.previousResponse.queued - response.queued, 1)
+      done()
+    })
+  })
+
+  it('returned object has an "available" property', function (done) {
+    this.busRx.getRxQueueLength(function (err, response) {
+      if (err) throw err
+      assert(response.hasOwnProperty('available'))
+      done()
+    })
+  })
+})

@@ -119,6 +119,9 @@ function createBus () {
     },
     [C.CMD_RX_PEEK]: function () {
       return RxQueue[0]
+    },
+    [C.CMD_RX_LENGTH]: function () {
+      return Buffer.from([0, RxQueue.length])
     }
   }
 

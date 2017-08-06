@@ -395,7 +395,18 @@ module.exports = {
             })
           }
         })
-      }
+      },
+
+      getRxQueueLengthSync () {
+        var response = executeCommandSync(C.CMD_RX_LENGTH)
+        return { available: response[0], queued: response[1] }
+      },
+      getRxQueueLength (cb) {
+        executeCommand(C.CMD_RX_LENGTH, function (err, response) {
+          if (err) cb(err)
+          else cb(null, { available: response[0], queued: response[1] })
+        })
+      },
     }
   }
 }
