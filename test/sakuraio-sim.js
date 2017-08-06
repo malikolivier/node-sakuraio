@@ -176,6 +176,9 @@ function createBus () {
     },
     [C.CMD_GET_PRODUCT_ID]: function () {
       return Buffer.from([0xFF, 0xFF])
+    },
+    [C.CMD_GET_UNIQUE_ID]: function () {
+      return Buffer.from('abcdefghijk')
     }
   }
 

@@ -490,6 +490,16 @@ module.exports = {
           if (err) cb(err)
           else cb(null, Util.bufferToProductId(response))
         })
+      },
+
+      getUniqueIDSync () {
+        return executeCommandSync(C.CMD_GET_UNIQUE_ID).toString('ascii')
+      },
+      getUniqueID (cb) {
+        executeCommand(C.CMD_GET_UNIQUE_ID, function (err, response) {
+          if (err) cb(err)
+          else cb(null, response.toString('ascii'))
+        })
       }
     }
   }

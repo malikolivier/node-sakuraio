@@ -440,3 +440,13 @@ describe('getProductID', function () {
     })
   })
 })
+
+describe('getUniqueID', function () {
+  it('get simulated SakuraIO unique ID', function (done) {
+    this.bus.getUniqueID(function (err, uniqueId) {
+      if (err) throw err
+      assert.equal(uniqueId, 'abcdefghijk')
+      done()
+    })
+  })
+})
