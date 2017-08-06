@@ -115,7 +115,10 @@ function createBus () {
       return Buffer.from([C.TX_STAT_NONE, C.TX_STAT_NONE])
     },
     [C.CMD_RX_DEQUEUE]: function () {
-      return Buffer.from(RxQueue.shift())
+      return RxQueue.shift()
+    },
+    [C.CMD_RX_PEEK]: function () {
+      return RxQueue[0]
     }
   }
 
@@ -169,6 +172,8 @@ function createBus () {
           result = C.CMD_ERROR_PARITY
         // Error specifics to some commands
         } else if (currentCmd === C.CMD_RX_DEQUEUE && RxQueue.length === 0) {
+          result = C.CMD_ERROR_RUNTIME
+        } else if (currentCmd === C.CMD_RX_PEEK && RxQueue.length === 0) {
           result = C.CMD_ERROR_RUNTIME
         } else {
           currentReceiveState = RECEIVE_STATE.WILL_SEND_RESPONSE_LENGTH

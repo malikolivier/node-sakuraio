@@ -282,3 +282,10 @@ describe('dequeueRx', function () {
     })
   })
 })
+
+describe('peekRx', function () {
+  it('can peek on queued int32', function () {
+    var response = this.bus.peekRxSync()
+    assert.equal(response.value, 42)
+  })
+})

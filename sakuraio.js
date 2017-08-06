@@ -374,6 +374,27 @@ module.exports = {
             })
           }
         })
+      },
+
+      peekRxSync () {
+        var response = executeCommandSync(C.CMD_RX_PEEK)
+        return {
+          channel: response[0],
+          value: Util.decodeValue(response),
+          offset: Util.decodeOffset(response)
+        }
+      },
+      peekRx (cb) {
+        executeCommand(C.CMD_RX_PEEK, function (err, response) {
+          if (err) cb(err)
+          else {
+            cb(null, {
+              channel: response[0],
+              value: Util.decodeValue(response),
+              offset: Util.decodeOffset(response)
+            })
+          }
+        })
       }
     }
   }
