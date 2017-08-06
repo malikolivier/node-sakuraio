@@ -2,7 +2,19 @@ const C = require('./src/commands')
 
 const ERROR_PARITY = new Error('Parity error')
 function errorNumber (errNo) {
-  return new Error(`Error result: ${errNo}`)
+  var desc = ''
+  switch (errNo) {
+    case C.CMD_ERROR_MISSING:
+      desc = 'Missing or unknown command'
+      break
+    case C.CMD_ERROR_INVALID_SYNTAX:
+      desc = 'Syntax error'
+      break
+    case C.CMD_ERROR_PARITY:
+      desc = 'Parity error'
+      break
+  }
+  return new Error(`Error result: ${errNo} ${desc}`)
 }
 
 module.exports = {
