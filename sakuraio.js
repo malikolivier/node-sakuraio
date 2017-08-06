@@ -1,4 +1,5 @@
 const C = require('./src/commands')
+const Util = require('./src/util')
 
 const ERROR_PARITY = new Error('Parity error')
 function errorNumber (errNo) {
@@ -196,7 +197,29 @@ module.exports = {
           if (err) cb(err)
           else cb(null, response[0])
         })
-      }
+      },
+
+      getSignalQualitySync () {
+        var response = executeCommandSync(C.CMD_GET_SIGNAL_QUALITY)
+        return response[0]
+      },
+      getSignalQuality (cb) {
+        executeCommand(C.CMD_GET_SIGNAL_QUALITY, function (err, response) {
+          if (err) cb(err)
+          else cb(null, response[0])
+        })
+      },
+
+      getDateTimeSync () {
+        var response = executeCommandSync(C.CMD_GET_DATETIME)
+        return Util.bufferToDate(response)
+      },
+      getDateTime (cb) {
+        executeCommand(C.CMD_GET_DATETIME, function (err, response) {
+          if (err) cb(err)
+          else cb(null, Util.bufferToDate(response))
+        })
+      },
     }
   }
 }

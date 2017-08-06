@@ -4,6 +4,22 @@ const C = require('../src/commands')
 const CMDS = {
   [C.CMD_GET_CONNECTION_STATUS]: function () {
     return Buffer.from([C.CONNECTION_STATUS_ERROR_NONE])
+  },
+  [C.CMD_GET_SIGNAL_QUALITY]: function () {
+    return Buffer.from([C.SIGNAL_QUALITY_VERY_STRONG])
+  },
+  [C.CMD_GET_DATETIME]: function () {
+    var now = Date.now()
+    var residual = now
+    var response = Buffer.alloc(8)
+    var i = 0
+    while (residual > 0xFF && i < 7) {
+      response[i] = residual % 0x100
+      residual = Math.floor(residual / 0x100)
+      i += 1
+    }
+    response[i] = residual
+    return response
   }
 }
 
@@ -25,7 +41,6 @@ function createBus () {
   var requestBuf
   var requestByteCount
   var parity
-  var receivedParityByte
   var result
   var responseBuf
   var responseByteCount
@@ -56,7 +71,7 @@ function createBus () {
         }
         break
       case SEND_STATE.WAITING_PARITY_BYTE:
-        receivedParityByte = byte
+        parity ^= byte
         currentSendState = SEND_STATE.WAITING_COMMAND
         break
     }
@@ -68,7 +83,7 @@ function createBus () {
           result = C.CMD_ERROR_MISSING
         } else if (requestBuf.length !== requestByteCount) {
           result = C.CMD_ERROR_INVALID_SYNTAX
-        } else if (receivedParityByte ^ parity !== 0x00) {
+        } else if (parity !== 0x00) {
           result = C.CMD_ERROR_PARITY
         } else {
           currentReceiveState = RECEIVE_STATE.WILL_SEND_RESPONSE_LENGTH
