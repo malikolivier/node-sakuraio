@@ -33,3 +33,14 @@ describe('getDateTime', function () {
     })
   })
 })
+
+describe('echoBack', function () {
+  it('should return input as is', function (done) {
+    var input = Buffer.from('HelloWorld!')
+    this.bus.echoBack(input, function (err, echo) {
+      if (err) throw err
+      assert.deepEqual(input, echo)
+      done()
+    })
+  })
+})

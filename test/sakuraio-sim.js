@@ -20,6 +20,9 @@ const CMDS = {
     }
     response[i] = residual
     return response
+  },
+  [C.CMD_ECHO_BACK]: function (request) {
+    return Buffer.from(request)
   }
 }
 

@@ -221,6 +221,13 @@ module.exports = {
           else cb(null, Util.bufferToDate(response))
         })
       },
+
+      echoBackSync (requestBuf) {
+        return executeCommandSync(C.CMD_ECHO_BACK, requestBuf)
+      },
+      echoBack (requestBuf, cb) {
+        executeCommand(C.CMD_ECHO_BACK, requestBuf, cb)
+      },
     }
   }
 }
