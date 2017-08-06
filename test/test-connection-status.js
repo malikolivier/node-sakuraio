@@ -26,6 +26,7 @@ describe('getSignalQuality', function () {
 describe('getDateTime', function () {
   it('should return current time', function (done) {
     this.bus.getDateTime(function (err, now1) {
+      if (err) throw err
       var now2 = Date.now()
       assert(now2 - now1 < 1000) // Allow for 1s of delay at most
       done()
