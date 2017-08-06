@@ -28,6 +28,17 @@ const CMDS = {
       throw new Error(`Unexpected length of request: ${request}`)
     }
     return Buffer.alloc(0)
+  },
+  [C.CMD_TX_SENDIMMED]: function (request) {
+    for (var i = 0; i < Math.floor(request.length / 10); i++) {
+      var subrequest = request.slice(10 * i, 10 * (i + 1))
+      CMDS[C.CMD_TX_ENQUEUE](subrequest)
+    }
+    subrequest = request.slice(10 * i, 10 * (i + 1))
+    if (subrequest.length !== 0 && subrequest.length !== 8) {
+      throw new Error(`Unexpected length of request: ${request}`)
+    }
+    return Buffer.alloc(0)
   }
 }
 

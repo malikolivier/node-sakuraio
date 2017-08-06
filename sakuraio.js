@@ -226,6 +226,29 @@ module.exports = {
       return requestBuf
     }
 
+    function _buildSendImmediatelyRequest(array, options) {
+      var requestBuf
+      if (options.offset === undefined) {
+        requestBuf = Buffer.alloc(10 * array.length)
+      } else {
+        requestBuf = Buffer.alloc(10 * array.length + 8)
+      }
+      array.forEach(function (datum, i) {
+        var singleDatumBuf = _buildEnqueueTxRequest(datum.channel, datum.value,
+                                                    { type: datum.type })
+        for (var j = 0; j < singleDatumBuf.length; j++) {
+          requestBuf[10 * i + j] = singleDatumBuf[j]
+        }
+      })
+      if (options.offset !== undefined) {
+        var offset = Util.numberToUnsignedInt64Buffer(options.offset)
+        for (var i = 0; i < offset.length; i++) {
+          requestBuf[10 * array.length + i] = offset[i]
+        }
+      }
+      return requestBuf
+    }
+
     return {
       getConnectionStatusSync () {
         var response = executeCommandSync(C.CMD_GET_CONNECTION_STATUS)
@@ -278,7 +301,20 @@ module.exports = {
         }
         var requestBuf = _buildEnqueueTxRequest(channel, value, options)
         executeCommand(C.CMD_TX_ENQUEUE, requestBuf, cb)
-      }
+      },
+
+      sendImmediatelySync (array, options = {}) {
+        var requestBuf = _buildSendImmediatelyRequest(array, options)
+        return executeCommandSync(C.CMD_TX_SENDIMMED, requestBuf)
+      },
+      sendImmediately (array, options, cb) {
+        if (!cb) {
+          cb = options
+          options = {}
+        }
+        var requestBuf = _buildSendImmediatelyRequest(array, options)
+        executeCommand(C.CMD_TX_SENDIMMED, requestBuf, cb)
+      },
     }
   }
 }

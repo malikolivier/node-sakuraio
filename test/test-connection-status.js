@@ -72,3 +72,49 @@ describe('enqueueTx', function () {
     this.bus.enqueueTxSync(3, 124, { offset: 15000 })
   })
 })
+
+// SakuraIOSim will throw exceptions for any syntax error
+describe('sendImmediately', function () {
+  it('sendImmediately string with success', function (done) {
+    this.bus.sendImmediately([{
+      channel: 3,
+      value: 'Hello!'
+    }], function (err) {
+      if (err) throw err
+      done()
+    })
+  })
+
+  it('sendImmediately number with success', function (done) {
+    this.bus.sendImmediately([{
+      channel: 0,
+      value: 124.123
+    }], function (err) {
+      if (err) throw err
+      done()
+    })
+  })
+
+  it('sendImmediately number with offset with success', function (done) {
+    this.bus.sendImmediately([{
+      channel: 0,
+      value: 124
+    }], { offset: 15000 }, function (err) {
+      if (err) throw err
+      done()
+    })
+  })
+
+  it('sendImmediately number with offset with success (sync)', function () {
+    this.bus.sendImmediatelySync([{
+      channel: 0,
+      value: 124
+    }, {
+      channel: 1,
+      value: 'FooBar!'
+    }, {
+      channel: 2,
+      value: Buffer.from([0x12, 0x24, 0x01])
+    }], { offset: 15000 })
+  })
+})
