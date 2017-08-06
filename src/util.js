@@ -12,7 +12,7 @@ module.exports = {
     // Encode as 64-bit double floating point number
     var buffer = Buffer.alloc(8)
     var view = new DataView(buffer.buffer)
-    view.setFloat64(0, number)
+    view.setFloat64(0, number, true)
     return buffer
   },
   numberToFloat32Buffer (number) {
