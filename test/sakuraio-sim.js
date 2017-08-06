@@ -2,46 +2,6 @@ const SakuraIO = require('../sakuraio')
 const C = require('../src/commands')
 const Util = require('../src/util')
 
-const CMDS = {
-  [C.CMD_GET_CONNECTION_STATUS]: function () {
-    return Buffer.from([C.CONNECTION_STATUS_ERROR_NONE])
-  },
-  [C.CMD_GET_SIGNAL_QUALITY]: function () {
-    return Buffer.from([C.SIGNAL_QUALITY_VERY_STRONG])
-  },
-  [C.CMD_GET_DATETIME]: function () {
-    var now = Date.now()
-    return Util.numberToUnsignedInt64Buffer(now)
-  },
-  [C.CMD_ECHO_BACK]: function (request) {
-    return Buffer.from(request)
-  },
-  [C.CMD_TX_ENQUEUE]: function (request) {
-    if (request[0] > 0x7F) {
-      throw new Error(`Channel cannot be set to 128 or more. Got ${request[0]}`)
-    } else if ([C.TYPE_32BIT_SIGNED_INT, C.TYPE_32BIT_UNSIGNED_INT,
-                C.TYPE_64BIT_SIGNED_INT, C.TYPE_64BIT_UNSIGNED_INT,
-                C.TYPE_32BIT_FLOAT, C.TYPE_64BIT_FLOAT,
-                C.TYPE_8BYTE_ARRAY].indexOf(request[1]) < 0) {
-      throw new Error(`Incorrect type given: ${request[1]}`)
-    } else if (request.length !== 10 && request.length !== 18) {
-      throw new Error(`Unexpected length of request: ${request}`)
-    }
-    return Buffer.alloc(0)
-  },
-  [C.CMD_TX_SENDIMMED]: function (request) {
-    for (var i = 0; i < Math.floor(request.length / 10); i++) {
-      var subrequest = request.slice(10 * i, 10 * (i + 1))
-      CMDS[C.CMD_TX_ENQUEUE](subrequest)
-    }
-    subrequest = request.slice(10 * i, 10 * (i + 1))
-    if (subrequest.length !== 0 && subrequest.length !== 8) {
-      throw new Error(`Unexpected length of request: ${request}`)
-    }
-    return Buffer.alloc(0)
-  }
-}
-
 const SEND_STATE = {
   WAITING_COMMAND: Symbol('WAITING_COMMAND'),
   WAITING_REQUEST_LENGTH: Symbol('WAITING_REQUEST_LENGTH'),
@@ -56,6 +16,53 @@ const RECEIVE_STATE = {
 }
 
 function createBus () {
+  var queueLength = 0
+  const CMDS = {
+    [C.CMD_GET_CONNECTION_STATUS]: function () {
+      return Buffer.from([C.CONNECTION_STATUS_ERROR_NONE])
+    },
+    [C.CMD_GET_SIGNAL_QUALITY]: function () {
+      return Buffer.from([C.SIGNAL_QUALITY_VERY_STRONG])
+    },
+    [C.CMD_GET_DATETIME]: function () {
+      var now = Date.now()
+      return Util.numberToUnsignedInt64Buffer(now)
+    },
+    [C.CMD_ECHO_BACK]: function (request) {
+      return Buffer.from(request)
+    },
+    [C.CMD_TX_ENQUEUE]: function (request) {
+      queueLength += 1
+      if (request[0] > 0x7F) {
+        throw new Error(`Channel cannot be set to 128 or more. Got ${request[0]}`)
+      } else if ([C.TYPE_32BIT_SIGNED_INT, C.TYPE_32BIT_UNSIGNED_INT,
+        C.TYPE_64BIT_SIGNED_INT, C.TYPE_64BIT_UNSIGNED_INT,
+        C.TYPE_32BIT_FLOAT, C.TYPE_64BIT_FLOAT,
+        C.TYPE_8BYTE_ARRAY].indexOf(request[1]) < 0) {
+        throw new Error(`Incorrect type given: ${request[1]}`)
+      } else if (request.length !== 10 && request.length !== 18) {
+        throw new Error(`Unexpected length of request: ${request}`)
+      }
+      return Buffer.alloc(0)
+    },
+    [C.CMD_TX_SENDIMMED]: function (request) {
+      for (var i = 0; i < Math.floor(request.length / 10); i++) {
+        var subrequest = request.slice(10 * i, 10 * (i + 1))
+        CMDS[C.CMD_TX_ENQUEUE](subrequest)
+        // Decrement the queue wrongly incremented in previous function
+        queueLength -= 1
+      }
+      subrequest = request.slice(10 * i, 10 * (i + 1))
+      if (subrequest.length !== 0 && subrequest.length !== 8) {
+        throw new Error(`Unexpected length of request: ${request}`)
+      }
+      return Buffer.alloc(0)
+    },
+    [C.CMD_TX_LENGTH]: function () {
+      return Buffer.from([16 - queueLength, queueLength])
+    }
+  }
+
   var currentCmd
   var requestBuf
   var requestByteCount

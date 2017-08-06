@@ -118,3 +118,41 @@ describe('sendImmediately', function () {
     }], { offset: 15000 })
   })
 })
+
+describe('getTxQueueLength', function () {
+  beforeEach(function () {
+    this.busTxQueue = SakuraIOSim.openSync()
+  })
+
+  context('Nothing queued', function () {
+    it('TxQueue is empty', function (done) {
+      this.busTxQueue.getTxQueueLength(function (err, response) {
+        if (err) throw err
+        assert.equal(response.queued, 0)
+        done()
+      })
+    })
+  })
+
+  context('One datum in TxQueue', function () {
+    beforeEach(function () {
+      this.previousResponse = this.busTxQueue.getTxQueueLengthSync()
+      this.busTxQueue.enqueueTxSync(0, 0)
+    })
+
+    it('available slot decreased by one', function (done) {
+      this.busTxQueue.getTxQueueLength((err, response) => {
+        if (err) throw err
+        assert.equal(this.previousResponse.available - response.available, 1)
+        done()
+      })
+    })
+    it('queued is one', function (done) {
+      this.busTxQueue.getTxQueueLength(function (err, response) {
+        if (err) throw err
+        assert.equal(response.queued, 1)
+        done()
+      })
+    })
+  })
+})

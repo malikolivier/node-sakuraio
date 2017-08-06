@@ -188,7 +188,7 @@ module.exports = {
       }
     }
 
-    function _buildEnqueueTxRequest(channel, value, options) {
+    function _buildEnqueueTxRequest (channel, value, options) {
       var requestBuf
       if (options.offset === undefined) {
         requestBuf = Buffer.alloc(10)
@@ -226,7 +226,7 @@ module.exports = {
       return requestBuf
     }
 
-    function _buildSendImmediatelyRequest(array, options) {
+    function _buildSendImmediatelyRequest (array, options) {
       var requestBuf
       if (options.offset === undefined) {
         requestBuf = Buffer.alloc(10 * array.length)
@@ -315,6 +315,17 @@ module.exports = {
         var requestBuf = _buildSendImmediatelyRequest(array, options)
         executeCommand(C.CMD_TX_SENDIMMED, requestBuf, cb)
       },
+
+      getTxQueueLengthSync () {
+        var response = executeCommandSync(C.CMD_TX_LENGTH)
+        return { available: response[0], queued: response[1] }
+      },
+      getTxQueueLength (cb) {
+        executeCommand(C.CMD_TX_LENGTH, function (err, response) {
+          if (err) cb(err)
+          else cb(null, { available: response[0], queued: response[1] })
+        })
+      }
     }
   }
 }
