@@ -60,6 +60,10 @@ function createBus () {
     },
     [C.CMD_TX_LENGTH]: function () {
       return Buffer.from([16 - queueLength, queueLength])
+    },
+    [C.CMD_TX_CLEAR]: function () {
+      queueLength = 0
+      return Buffer.alloc(0)
     }
   }
 

@@ -156,3 +156,21 @@ describe('getTxQueueLength', function () {
     })
   })
 })
+
+describe('clearTx', function () {
+  beforeEach(function () {
+    this.busTxQueue = SakuraIOSim.openSync()
+    this.busTxQueue.enqueueTxSync(0, 0)
+  })
+
+  it('clears the queue', function (done) {
+    this.busTxQueue.clearTx((err) => {
+      if (err) throw err
+      this.busTxQueue.getTxQueueLength((err, response) => {
+        if (err) throw err
+        assert.equal(response.queued, 0)
+        done()
+      })
+    })
+  })
+})

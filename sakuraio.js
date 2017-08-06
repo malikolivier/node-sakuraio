@@ -325,6 +325,13 @@ module.exports = {
           if (err) cb(err)
           else cb(null, { available: response[0], queued: response[1] })
         })
+      },
+
+      clearTxSync () {
+        return executeCommandSync(C.CMD_TX_CLEAR)
+      },
+      clearTx (cb) {
+        executeCommand(C.CMD_TX_CLEAR, cb)
       }
     }
   }
