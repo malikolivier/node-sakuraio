@@ -70,6 +70,11 @@ module.exports = {
   TYPE_64BIT_FLOAT: 'd'.charCodeAt(0),
   TYPE_8BYTE_ARRAY: 'b'.charCodeAt(0),
 
+  // Tx status
+  TX_STAT_NONE: 0x00,
+  TX_STAT_SENDING: 0x01,
+  TX_STAT_FAILURE: 0x02,
+
   // FileStatus
   FILE_STATUS_ERROR: 0x01,
   FILE_STATUS_INVALID_REQUEST: 0x02,

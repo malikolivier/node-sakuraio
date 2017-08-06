@@ -192,3 +192,14 @@ describe('send', function () {
     })
   })
 })
+
+describe('getTxStatus', function () {
+  it('contains a number "queue" attribute', function () {
+    var status = this.bus.getTxStatusSync()
+    assert(typeof status.queue === 'number')
+  })
+  it('contains a number "immediate" attribute', function () {
+    var status = this.bus.getTxStatusSync()
+    assert(typeof status.immediate === 'number')
+  })
+})

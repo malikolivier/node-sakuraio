@@ -68,6 +68,9 @@ function createBus () {
     [C.CMD_TX_SEND]: function () {
       queueLength = 0
       return Buffer.alloc(0)
+    },
+    [C.CMD_TX_STAT]: function () {
+      return Buffer.from([C.TX_STAT_NONE, C.TX_STAT_NONE])
     }
   }
 

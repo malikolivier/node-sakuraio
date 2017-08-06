@@ -340,6 +340,17 @@ module.exports = {
       send (cb) {
         executeCommand(C.CMD_TX_SEND, cb)
       },
+
+      getTxStatusSync () {
+        var response = executeCommandSync(C.CMD_TX_STAT)
+        return { queue: response[0], immediate: response[1] }
+      },
+      getTxStatus (cb) {
+        executeCommand(C.CMD_TX_STAT, function (err, response) {
+          if (err) cb(err)
+          else cb(null, { queue: response[0], immediate: response[1] })
+        })
+      },
     }
   }
 }
