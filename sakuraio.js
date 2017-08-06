@@ -14,6 +14,9 @@ function errorNumber (errNo) {
     case C.CMD_ERROR_PARITY:
       desc = 'Parity error'
       break
+    case C.CMD_ERROR_RUNTIME:
+      desc = 'Runtime error'
+      break
   }
   return new Error(`Error result: ${errNo} ${desc}`)
 }

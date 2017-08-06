@@ -167,6 +167,9 @@ function createBus () {
           result = C.CMD_ERROR_INVALID_SYNTAX
         } else if (parity !== 0x00) {
           result = C.CMD_ERROR_PARITY
+        // Error specifics to some commands
+        } else if (currentCmd === C.CMD_RX_DEQUEUE && RxQueue.length === 0) {
+          result = C.CMD_ERROR_RUNTIME
         } else {
           currentReceiveState = RECEIVE_STATE.WILL_SEND_RESPONSE_LENGTH
           result = C.CMD_ERROR_NONE

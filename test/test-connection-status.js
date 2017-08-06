@@ -269,5 +269,16 @@ describe('dequeueRx', function () {
       var response = this.busRx.dequeueRxSync()
       assert.deepEqual(response.value, Buffer.from('Hello42!'))
     })
+    it('raises runtime error on empty queue!', function () {
+      assert.throws(() => {
+        this.busRx.dequeueRxSync()
+      })
+    })
+    it('returns async runtime error on empty queue!', function (done) {
+      this.busRx.dequeueRx(function (err) {
+        assert(err.message.includes('Runtime'))
+        done()
+      })
+    })
   })
 })
