@@ -4,6 +4,7 @@ const fs = require('fs')
 const assert = require('assert')
 const SakuraIOSim = require('./sakuraio-sim')
 const C = require('../src/commands')
+const PackageJSON = require('../package.json')
 
 before(function () {
   this.bus = SakuraIOSim.openSync()
@@ -446,6 +447,16 @@ describe('getUniqueID', function () {
     this.bus.getUniqueID(function (err, uniqueId) {
       if (err) throw err
       assert.equal(uniqueId, 'abcdefghijk')
+      done()
+    })
+  })
+})
+
+describe('getFirmwareVersion', function () {
+  it('get simulated SakuraIO firmware version', function (done) {
+    this.bus.getFirmwareVersion(function (err, version) {
+      if (err) throw err
+      assert.equal(version, PackageJSON.version)
       done()
     })
   })

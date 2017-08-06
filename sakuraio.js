@@ -500,6 +500,16 @@ module.exports = {
           if (err) cb(err)
           else cb(null, response.toString('ascii'))
         })
+      },
+
+      getFirmwareVersionSync () {
+        return executeCommandSync(C.CMD_GET_FIRMWARE_VERSION).toString('ascii')
+      },
+      getFirmwareVersion (cb) {
+        executeCommand(C.CMD_GET_FIRMWARE_VERSION, function (err, response) {
+          if (err) cb(err)
+          else cb(null, response.toString('ascii'))
+        })
       }
     }
   }

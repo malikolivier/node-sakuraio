@@ -5,6 +5,7 @@ const CRC32 = require('crc-32')
 const SakuraIO = require('../sakuraio')
 const C = require('../src/commands')
 const Util = require('../src/util')
+const PackageJSON = require('../package.json')
 
 const SEND_STATE = {
   WAITING_COMMAND: Symbol('WAITING_COMMAND'),
@@ -179,6 +180,9 @@ function createBus () {
     },
     [C.CMD_GET_UNIQUE_ID]: function () {
       return Buffer.from('abcdefghijk')
+    },
+    [C.CMD_GET_FIRMWARE_VERSION]: function () {
+      return Buffer.from(PackageJSON.version)
     }
   }
 
