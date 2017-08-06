@@ -407,3 +407,26 @@ describe('cancelFileDownload', function () {
     })
   })
 })
+
+describe('getFileData', function () {
+  beforeEach(function () {
+    this.fileContent = fs.readFileSync(`${__dirname}/fixtures/files/1`)
+    this.bus.startFileDownloadSync(1)
+  })
+
+  it('get file content 256 bytes at a time (highest possible value)', function (done) {
+    this.bus.getFileData(0xFF, (err, response) => {
+      if (err) throw err
+      assert.deepEqual(response, this.fileContent)
+      done()
+    })
+  })
+
+  it('get file content 2 bytes at a time', function (done) {
+    this.bus.getFileData(2, (err, response) => {
+      if (err) throw err
+      assert.deepEqual(response, this.fileContent.slice(0, 2))
+      done()
+    })
+  })
+})

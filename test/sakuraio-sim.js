@@ -63,7 +63,7 @@ function createRxQueue42 () {
 function createBus () {
   var queueLength = 0
   var RxQueue = createRxQueue42()
-  var fileId
+  var fileId, fileDownloadCursor
   const CMDS = {
     [C.CMD_GET_CONNECTION_STATUS]: function () {
       return Buffer.from([C.CONNECTION_STATUS_ERROR_NONE])
@@ -134,6 +134,7 @@ function createBus () {
     },
     [C.CMD_START_FILE_DOWNLOAD]: function (request) {
       fileId = request.readIntLE(0, 2)
+      fileDownloadCursor = 0
       return Buffer.alloc(0)
     },
     [C.CMD_GET_FILE_METADATA]: function () {
@@ -165,6 +166,13 @@ function createBus () {
     [C.CMD_CANCEL_FILE_DOWNLOAD]: function () {
       fileId = undefined
       return Buffer.alloc(0)
+    },
+    [C.CMD_GET_FILE_DATA]: function (request) {
+      var content = fs.readFileSync(`${__dirname}/fixtures/files/${fileId}`)
+      var response = content.slice(fileDownloadCursor,
+                                   fileDownloadCursor + request[0])
+      fileDownloadCursor += request[0]
+      return response
     }
   }
 

@@ -473,6 +473,13 @@ module.exports = {
       },
       cancelFileDownload (cb) {
         executeCommand(C.CMD_CANCEL_FILE_DOWNLOAD, cb)
+      },
+
+      getFileDataSync (size) {
+        return executeCommandSync(C.CMD_GET_FILE_DATA, Buffer.from([size]))
+      },
+      getFileData (size, cb) {
+        executeCommand(C.CMD_GET_FILE_DATA, Buffer.from([size]), cb)
       }
     }
   }
