@@ -161,6 +161,10 @@ function createBus () {
       }
       response.writeIntLE(3, 1, 4)
       return response
+    },
+    [C.CMD_CANCEL_FILE_DOWNLOAD]: function () {
+      fileId = undefined
+      return Buffer.alloc(0)
     }
   }
 

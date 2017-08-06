@@ -466,6 +466,13 @@ module.exports = {
             })
           }
         })
+      },
+
+      cancelFileDownloadSync () {
+        return executeCommandSync(C.CMD_CANCEL_FILE_DOWNLOAD)
+      },
+      cancelFileDownload (cb) {
+        executeCommand(C.CMD_CANCEL_FILE_DOWNLOAD, cb)
       }
     }
   }

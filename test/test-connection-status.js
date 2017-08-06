@@ -392,3 +392,18 @@ describe('getFileMetaData', function () {
     })
   })
 })
+
+describe('cancelFileDownload', function () {
+  before(function () {
+    this.bus.startFileDownloadSync(1)
+    this.bus.cancelFileDownloadSync()
+  })
+
+  it('cancels the file download', function (done) {
+    this.bus.getFileDownloadStatus(function (err, response) {
+      if (err) throw err
+      assert.equal(response.status, C.FILE_DOWNLOAD_STATUS_UNKNOWN)
+      done()
+    })
+  })
+})
