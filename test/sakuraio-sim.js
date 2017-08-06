@@ -1,3 +1,7 @@
+const fs = require('fs')
+
+const CRC32 = require('crc-32')
+
 const SakuraIO = require('../sakuraio')
 const C = require('../src/commands')
 const Util = require('../src/util')
@@ -59,6 +63,7 @@ function createRxQueue42 () {
 function createBus () {
   var queueLength = 0
   var RxQueue = createRxQueue42()
+  var fileId
   const CMDS = {
     [C.CMD_GET_CONNECTION_STATUS]: function () {
       return Buffer.from([C.CONNECTION_STATUS_ERROR_NONE])
@@ -126,6 +131,26 @@ function createBus () {
     [C.CMD_RX_CLEAR]: function () {
       RxQueue = []
       return Buffer.alloc(0)
+    },
+    [C.CMD_START_FILE_DOWNLOAD]: function (request) {
+      fileId = request.readIntLE(0, 2)
+      return Buffer.alloc(0)
+    },
+    [C.CMD_GET_FILE_METADATA]: function () {
+      var response = Buffer.alloc(0x11)
+      var path = `${__dirname}/fixtures/files/${fileId}`
+      try {
+        var stats = fs.statSync(path)
+        var content = fs.readFileSync(path)
+        response[0] = 0x00 // assume 0x00 is for success
+        response.writeUIntLE(content.length, 1, 4)
+        var fileSizeBuf = Util.numberToUnsignedInt64Buffer(Math.floor(stats.birthtimeMs))
+        fileSizeBuf.copy(response, 5)
+        response.writeIntLE(CRC32.buf(content), 13, 4)
+      } catch (e) {
+        response[0] = C.FILE_STATUS_NOTFOUND
+      }
+      return response
     }
   }
 

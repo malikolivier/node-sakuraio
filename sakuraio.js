@@ -413,6 +413,40 @@ module.exports = {
       },
       clearRx (cb) {
         executeCommand(C.CMD_RX_CLEAR, cb)
+      },
+
+      startFileDownloadSync (fileId) {
+        var requestBuf = Buffer.alloc(2)
+        requestBuf.writeUIntLE(fileId, 0, 2)
+        executeCommandSync(C.CMD_START_FILE_DOWNLOAD, requestBuf)
+      },
+      startFileDownload (fileId, cb) {
+        var requestBuf = Buffer.alloc(2)
+        requestBuf.writeUIntLE(fileId, 0, 2)
+        executeCommand(C.CMD_START_FILE_DOWNLOAD, requestBuf, cb)
+      },
+
+      getFileMetaDataSync () {
+        var response = executeCommandSync(C.CMD_GET_FILE_METADATA)
+        return {
+          status: response[0],
+          totalSize: response.readIntLE(1, 4),
+          timestamp: Util.unsignedInt64BufferToNumber(response, 5),
+          crc: response.readIntLE(13, 4)
+        }
+      },
+      getFileMetaData (cb) {
+        executeCommand(C.CMD_GET_FILE_METADATA, function (err, response) {
+          if (err) cb(err)
+          else {
+            cb(null, {
+              status: response[0],
+              totalSize: response.readIntLE(1, 4),
+              timestamp: Util.unsignedInt64BufferToNumber(response, 5),
+              crc: response.readIntLE(13, 4)
+            })
+          }
+        })
       }
     }
   }

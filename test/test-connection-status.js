@@ -1,4 +1,6 @@
 /* eslint-env mocha */
+const fs = require('fs')
+
 const assert = require('assert')
 const SakuraIOSim = require('./sakuraio-sim')
 const C = require('../src/commands')
@@ -325,6 +327,48 @@ describe('clearRx', function () {
       this.busRx.getRxQueueLength((err, response) => {
         if (err) throw err
         assert.equal(response.queued, 0)
+        done()
+      })
+    })
+  })
+})
+
+describe('getFileMetaData', function () {
+  before(function () {
+    this.fileContent = fs.readFileSync(`${__dirname}/fixtures/files/1`)
+    this.fileStats = fs.statSync(`${__dirname}/fixtures/files/1`)
+  })
+
+  it('returns FILE_STATUS_NOTFOUND for unfound file', function () {
+    this.bus.startFileDownloadSync(2)
+    var metadata = this.bus.getFileMetaDataSync()
+    assert.equal(metadata.status, C.FILE_STATUS_NOTFOUND)
+  })
+
+  context('found file', function () {
+    beforeEach(function () {
+      this.bus.startFileDownloadSync(1)
+    })
+
+    it('returns FILE_STATUS_OK for found file', function () {
+      var metadata = this.bus.getFileMetaDataSync()
+      assert.equal(metadata.status, 0x00)
+    })
+
+    it('returns filesize for found file', function () {
+      var metadata = this.bus.getFileMetaDataSync()
+      assert.equal(metadata.totalSize, this.fileContent.length)
+    })
+
+    it('returns timestamp for found file', function () {
+      var metadata = this.bus.getFileMetaDataSync()
+      assert.equal(metadata.timestamp, Math.floor(this.fileStats.birthtimeMs))
+    })
+
+    it('returns crc for found file', function (done) {
+      this.bus.getFileMetaData(function (err, metadata) {
+        if (err) throw err
+        assert(typeof metadata.crc === 'number')
         done()
       })
     })

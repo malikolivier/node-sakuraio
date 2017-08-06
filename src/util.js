@@ -104,5 +104,6 @@ module.exports = {
   },
   decodeOffset (responseBuffer) {
     return unsignedInt64BufferToNumber(responseBuffer, 10)
-  }
+  },
+  unsignedInt64BufferToNumber
 }
