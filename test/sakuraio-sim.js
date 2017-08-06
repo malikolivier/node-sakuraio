@@ -103,13 +103,13 @@ function createBus () {
       setTimeout(function () {
         sendByteSync(byte)
         cb()
-      }, 10)
+      }, 1)
     },
     sendByteSync,
     receiveByte (cb) {
       setTimeout(function () {
         cb(null, receiveByteSync())
-      }, 10)
+      }, 1)
     },
     receiveByteSync
   })
@@ -119,7 +119,7 @@ module.exports = {
   open (cb) {
     setTimeout(function () {
       cb(null, createBus())
-    }, 10)
+    }, 1)
   },
   openSync () {
     return createBus()
