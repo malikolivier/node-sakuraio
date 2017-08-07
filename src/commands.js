@@ -75,9 +75,7 @@ module.exports = {
   TX_STAT_SENDING: 0x01,
   TX_STAT_FAILURE: 0x02,
 
-  // FileStatus
-  // TODO: the file status and file download status constants are dubious.
-  // They are not exactly the same as the datasheet.
+  // File status (metadata)
   FILE_STATUS_ERROR: 0x01,
   FILE_STATUS_INVALID_REQUEST: 0x02,
   FILE_STATUS_NOTFOUND: 0x81,
