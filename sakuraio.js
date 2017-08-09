@@ -274,12 +274,22 @@ module.exports = {
     return {
       getConnectionStatusSync () {
         var response = executeCommandSync(C.CMD_GET_CONNECTION_STATUS)
-        return response[0]
+        var errorCode = response[0] & 0x7F
+        return {
+          ok: (response[0] & 0x80) === 0x80,
+          errorCode: errorCode === C.CONNECTION_STATUS_ERROR_NONE ? null : errorCode
+        }
       },
       getConnectionStatus (cb) {
         executeCommand(C.CMD_GET_CONNECTION_STATUS, function (err, response) {
           if (err) cb(err)
-          else cb(null, response[0])
+          else {
+            var errorCode = response[0] & 0x7F
+            cb(null, {
+              ok: (response[0] & 0x80) === 0x80,
+              errorCode: errorCode === C.CONNECTION_STATUS_ERROR_NONE ? null : errorCode
+            })
+          }
         })
       },
 

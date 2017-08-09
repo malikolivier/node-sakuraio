@@ -10,7 +10,7 @@ describe('Async and sync', function () {
       if (err) throw err
       bus.getConnectionStatus(function (err, asyncResult) {
         if (err) throw err
-        assert.equal(syncResult, asyncResult)
+        assert.deepEqual(syncResult, asyncResult)
         done()
       })
     })

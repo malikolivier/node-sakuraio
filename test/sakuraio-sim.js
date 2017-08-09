@@ -71,7 +71,8 @@ function createBus () {
   var firmwareUpdating = false
   const CMDS = {
     [C.CMD_GET_CONNECTION_STATUS]: function () {
-      return Buffer.from([C.CONNECTION_STATUS_ERROR_NONE])
+      var ok = 1
+      return Buffer.from([(ok << 7) + C.CONNECTION_STATUS_ERROR_NONE])
     },
     [C.CMD_GET_SIGNAL_QUALITY]: function () {
       return Buffer.from([C.SIGNAL_QUALITY_VERY_STRONG])

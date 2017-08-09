@@ -11,10 +11,18 @@ before(function () {
 })
 
 describe('getConnectionStatus', function () {
-  it('should return 0 for no error', function (done) {
+  it('should return ok for no error', function (done) {
     this.bus.getConnectionStatus(function (err, status) {
       if (err) throw err
-      assert.equal(status, C.CONNECTION_STATUS_ERROR_NONE)
+      assert(status.ok)
+      done()
+    })
+  })
+
+  it('errorCode should be null ', function (done) {
+    this.bus.getConnectionStatus(function (err, status) {
+      if (err) throw err
+      assert.equal(status.errorCode, null)
       done()
     })
   })
