@@ -6,16 +6,12 @@
   "scripts": {
     "test": "standard && nyc --reporter=html --reporter=text mocha"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@gitlab.com/symax/node-sakuraio.git"
-  },
   "author": "Malik Olivier Boussejra <malik@boussejra.com>",
   "license": "ISC",
   "bugs": {
-    "url": "https://gitlab.com/symax/node-sakuraio/issues"
+    "url": "https://github.com/malikolivier/node-sakuraio/issues"
   },
-  "homepage": "https://gitlab.com/symax/node-sakuraio#README",
+  "homepage": "https://github.com/malikolivier/node-sakuraio",
   "devDependencies": {
     "crc-32": "^1.1.0",
     "mocha": "^3.5.0",
