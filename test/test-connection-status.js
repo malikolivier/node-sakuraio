@@ -497,7 +497,6 @@ describe('getFirmwareUpdateStatus', function () {
   it('shows no error', function (done) {
     this.bus.getFirmwareUpdateStatus(function (err, status) {
       if (err) throw err
-      console.log(status.anyError)
       assert(!status.anyError)
       done()
     })
