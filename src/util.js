@@ -37,8 +37,8 @@ function signedInt64BufferToNumber (buf, offset = 0) {
 }
 
 module.exports = {
-  bufferToDate (buf) {
-    return new Date(unsignedInt64BufferToNumber(buf))
+  bufferToDate (buf, offset = 0) {
+    return new Date(unsignedInt64BufferToNumber(buf, offset))
   },
   numberToFloat64Buffer (number) {
     // Encode as 64-bit double floating point number

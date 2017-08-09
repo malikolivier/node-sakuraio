@@ -148,7 +148,7 @@ function createBus () {
         var content = fs.readFileSync(path)
         response[0] = 0x00 // assume 0x00 is for success
         response.writeUIntLE(content.length, 1, 4)
-        var fileSizeBuf = Util.numberToUnsignedInt64Buffer(Math.floor(stats.birthtimeMs))
+        var fileSizeBuf = Util.numberToUnsignedInt64Buffer(stats.birthtime.getTime())
         fileSizeBuf.copy(response, 5)
         response.writeIntLE(CRC32.buf(content), 13, 4)
       } catch (e) {

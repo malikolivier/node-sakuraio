@@ -431,7 +431,7 @@ module.exports = {
         return {
           status: response[0],
           totalSize: response.readIntLE(1, 4),
-          timestamp: Util.unsignedInt64BufferToNumber(response, 5),
+          timestamp: Util.bufferToDate(response, 5),
           crc: response.readIntLE(13, 4)
         }
       },
@@ -442,7 +442,7 @@ module.exports = {
             cb(null, {
               status: response[0],
               totalSize: response.readIntLE(1, 4),
-              timestamp: Util.unsignedInt64BufferToNumber(response, 5),
+              timestamp: Util.bufferToDate(response, 5),
               crc: response.readIntLE(13, 4)
             })
           }

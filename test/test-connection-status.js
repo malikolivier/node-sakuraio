@@ -363,7 +363,7 @@ describe('getFileMetaData', function () {
 
     it('returns timestamp for found file', function () {
       var metadata = this.bus.getFileMetaDataSync()
-      assert.equal(metadata.timestamp, Math.floor(this.fileStats.birthtimeMs))
+      assert.deepEqual(metadata.timestamp, this.fileStats.birthtime)
     })
 
     it('returns crc for found file', function (done) {
