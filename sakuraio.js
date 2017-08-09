@@ -58,24 +58,29 @@ module.exports = {
       __readBuffer(response, 0, cb)
     }
     function _writeCommand (cmd, requestBuf, cb) {
-      bus.sendByte(cmd, function (err) {
-        if (err) {
-          cb(err)
-        } else {
-          bus.sendByte(requestBuf.length, function (err) {
+      bus.startWrite(function (err) {
+        if (err) cb(err)
+        else {
+          bus.sendByte(cmd, function (err) {
             if (err) {
               cb(err)
             } else {
-              parity = cmd ^ requestBuf.length
-              _writeBuffer(0, requestBuf, function (err) {
+              bus.sendByte(requestBuf.length, function (err) {
                 if (err) {
                   cb(err)
                 } else {
-                  bus.sendByte(parity, function (err) {
+                  parity = cmd ^ requestBuf.length
+                  _writeBuffer(0, requestBuf, function (err) {
                     if (err) {
                       cb(err)
                     } else {
-                      cb()
+                      bus.sendByte(parity, function (err) {
+                        if (err) {
+                          cb(err)
+                        } else {
+                          bus.endWrite(cb)
+                        }
+                      })
                     }
                   })
                 }
@@ -86,22 +91,32 @@ module.exports = {
       })
     }
     function _readResponse (cb) {
-      bus.receiveByte(function (err, result) {
-        if (err) {
-          cb(err)
-        } else if (result !== C.CMD_ERROR_NONE) {
-          cb(errorNumber(result))
-        } else {
-          bus.receiveByte(function (err, receivedResponseLength) {
+      bus.startRead(function (err) {
+        if (err) cb(err)
+        else {
+          bus.receiveByte(function (err, result) {
             if (err) {
               cb(err)
+            } else if (result !== C.CMD_ERROR_NONE) {
+              cb(errorNumber(result))
             } else {
-              parity = result ^ receivedResponseLength
-              _readBuffer(receivedResponseLength, function (err, response) {
+              bus.receiveByte(function (err, receivedResponseLength) {
                 if (err) {
                   cb(err)
                 } else {
-                  cb(null, response)
+                  parity = result ^ receivedResponseLength
+                  _readBuffer(receivedResponseLength, function (err, response) {
+                    if (err) {
+                      cb(err)
+                    } else {
+                      bus.endRead(function (err) {
+                        if (err) cb(err)
+                        else {
+                          cb(null, response)
+                        }
+                      })
+                    }
+                  })
                 }
               })
             }
@@ -162,6 +177,7 @@ module.exports = {
       if (!idle) {
         throw new Error('Busy!')
       } else {
+        bus.startWriteSync()
         bus.sendByteSync(cmd)
         bus.sendByteSync(requestBuf.length)
         parity = cmd ^ requestBuf.length
@@ -170,7 +186,9 @@ module.exports = {
           bus.sendByteSync(requestBuf[i])
         }
         bus.sendByteSync(parity)
+        bus.endWriteSync()
 
+        bus.startReadSync()
         var result = bus.receiveByteSync()
         if (result !== C.CMD_ERROR_NONE) {
           throw errorNumber(result)
@@ -187,6 +205,7 @@ module.exports = {
         if (parity !== 0x00) {
           throw ERROR_PARITY
         }
+        bus.endReadSync()
         return response
       }
     }

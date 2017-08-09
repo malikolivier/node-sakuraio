@@ -20,6 +20,8 @@ const RECEIVE_STATE = {
   WILL_SEND_PARITY_BYTE: Symbol('WILL_SEND_PARITY_BYTE')
 }
 
+function NOOP () {}
+
 // Create a standard RxQueue with all types of elements to work with
 function createRxQueue42 () {
   var int32 = Buffer.alloc(18)
@@ -314,6 +316,14 @@ function createBus () {
     }
   }
   return SakuraIO.use({
+    startWrite: process.nextTick,
+    startWriteSync: NOOP,
+    endWrite: process.nextTick,
+    endWriteSync: NOOP,
+    startRead: process.nextTick,
+    startReadSync: NOOP,
+    endRead: process.nextTick,
+    endReadSync: NOOP,
     sendByte (byte, cb) {
       setTimeout(function () {
         sendByteSync(byte)
