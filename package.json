@@ -1,6 +1,6 @@
 {
   "name": "sakuraio",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "SAKURA Internet IoT Communication Module Library for NodeJS",
   "main": "sakuraio.js",
   "scripts": {

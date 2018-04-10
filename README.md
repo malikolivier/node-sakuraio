@@ -15,8 +15,6 @@ Currently only I2c is supported. See: [node-sakuraio-i2c](https://github.com/mal
 This project is not affiliated with sakura.io and is licensed under the very
 permissive ISC license. Use it at your own risk.
 
-This is an alpha version so the API may not be stable yet!
-
 # API specification
 
 ### bus.getConnectionStatus(cb)
